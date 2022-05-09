@@ -13,6 +13,12 @@ import os
 
 # import display
 
+def setPositionToRobot(theta1, theta2, theta3, robot, params):
+    for k, v in robot.legs.items():
+            # Setting 0 s the goal position for each motor (such sadness! When we could be using the glorious inverse kinematics!)
+            v[0].goal_position = theta1
+            v[1].goal_position = theta2
+            v[2].goal_position = theta3
 
 def main():
     ports = pypot.dynamixel.get_available_ports()
@@ -48,14 +54,10 @@ def main():
         )
 
         print("Setting initial position")
-        for k, v in robot.legs.items():
-            # Setting 0 s the goal position for each motor (such sadness! When we could be using the glorious inverse kinematics!)
-            v[0].goal_position = 0
-            v[1].goal_position = 0
-            v[2].goal_position = 0
 
         # TODO create this function instead:
-        # setPositionToRobot(0, 0, 0, robot, params)
+        setPositionToRobot(0, 0, 0, robot, params)
+        
         robot.smooth_tick_read_and_write(3, verbose=False)
         print("Init position reached")
         time.sleep(2)
