@@ -5,10 +5,16 @@ import numpy as np
 import interpolation
 import time
 
+
+use_mm=USE_MM_OUTPUT
+l1=constL1
+l2=constL2
+l3=constL3
+sign = -1
 # Given the sizes (a, b, c) of the 3 sides of a triangle, returns the angle between a and b using the alKashi theorem.
 def alKashi(a, b, c, sign=-1):
     if a * b == 0:
-        print("WARNING a or b is null in AlKashi")
+        print("error")
         return 0
     # Note : to get the other altenative, simply change the sign of the return :
     return sign * math.acos(min(1, max(-1, (a ** 2 + b ** 2 - c ** 2) / (2 * a * b))))
@@ -21,12 +27,9 @@ def computeDK(
     theta1,
     theta2,
     theta3,
-    l1=constL1,
-    l2=constL2,
-    l3=constL3,
     use_rads=USE_RADS_INPUT,
-    use_mm=USE_MM_OUTPUT,
 ):
+    
     angle_unit = 1
     dist_unit = 1
     if not (use_rads):
@@ -55,13 +58,8 @@ def computeIK(
     x,
     y,
     z,
-    l1=constL1,
-    l2=constL2,
-    l3=constL3,
     verbose=False,
-    use_rads=USE_RADS_OUTPUT,
-    sign=-1,
-    use_mm=USE_MM_INPUT,
+    use_rads=USE_RADS_OUTPUT
 ):
     dist_unit = 1
     if use_mm:
@@ -117,13 +115,8 @@ def computeIKOriented(
     leg_id,
     params,
     teta,
-    l1=constL1,
-    l2=constL2,
-    l3=constL3,
     verbose=False,
     use_rads=USE_RADS_OUTPUT,
-    sign=-1,
-    use_mm=USE_MM_INPUT,
 ):
 
 
@@ -136,13 +129,8 @@ def computeIKOriented(
         x,
         y,
         z,
-        l1,
-        l2,
-        l3,
         verbose,
-        use_rads,
-        sign,
-        use_mm,
+        use_rads
         )
 
 
