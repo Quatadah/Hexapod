@@ -180,7 +180,7 @@ while True:
             set_leg_angles(alphas, leg_id, targets, params)
         state = sim.setJoints(targets)
     elif args.mode == "walk":
-        kinematics.walk (p.readUserDebugParameter(controls['freq']), params, targets, p.readUserDebugParameter(controls['teta']), p.readUserDebugParameter(controls['length']), p.readUserDebugParameter(controls['height']))
+        kinematics.walk (p.readUserDebugParameter(controls['freq']), params, targets, math.pi/4, p.readUserDebugParameter(controls['length']), p.readUserDebugParameter(controls['height']))
         state = sim.setJoints(targets)
         # Temp
     sim.tick()
