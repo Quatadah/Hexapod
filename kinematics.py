@@ -12,7 +12,7 @@ l2=constL2
 l3=constL3
 sign = -1
 # Given the sizes (a, b, c) of the 3 sides of a triangle, returns the angle between a and b using the alKashi theorem.
-def alKashi(a, b, c, sign=-1):
+def elkashi(a, b, c, sign=-1):
     if a * b == 0:
         print("error")
         return 0
@@ -81,8 +81,8 @@ def computeIK(
     d = math.sqrt(math.pow(xp, 2) + math.pow(z, 2))
     # Knowing l2, l3 and d, theta1 and theta2 can be computed using the Al Kashi law
     # There are 2 solutions for most of the points, forcing a convention here
-    theta2 = alKashi(l2, d, l3, sign=sign) - Z_DIRECTION * math.atan2(z, xp)
-    theta3 = math.pi + alKashi(l2, l3, d, sign=sign)
+    theta2 = elkashi(l2, d, l3, sign=sign) - Z_DIRECTION * math.atan2(z, xp)
+    theta3 = math.pi + elkashi(l2, l3, d, sign=sign)
 
     if use_rads:
 
