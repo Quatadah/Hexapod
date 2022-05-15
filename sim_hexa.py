@@ -108,6 +108,18 @@ elif args.mode == "walk":
     controls["length"] = p.addUserDebugParameter("Longueur", 0, 0.15, 0.1)
     controls["height"] = p.addUserDebugParameter("Hauteur des pas", 0, 0.2, 0.07)
 
+elif args.mode == "dance":
+    controls["teta"] = p.addUserDebugParameter("Direction", -math.pi, math.pi, 0)
+    controls["freq"] = p.addUserDebugParameter("Frequence", 0, 5, 1)
+    controls["length"] = p.addUserDebugParameter("Longueur", 0, 0.15, 0.1)
+    controls["height"] = p.addUserDebugParameter("Hauteur des pas", 0, 0.2, 0.07)
+
+elif args.mode == "rotate-walk":
+    controls["teta"] = p.addUserDebugParameter("Direction", -math.pi, math.pi, 0)
+    controls["freq"] = p.addUserDebugParameter("Frequence", 0, 5, 1)
+    controls["length"] = p.addUserDebugParameter("Longueur", 0, 0.15, 0.1)
+    controls["height"] = p.addUserDebugParameter("Hauteur des pas", 0, 0.2, 0.07)
+
 while True:
     targets = {}
     for name in sim.getJoints():
