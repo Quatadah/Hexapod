@@ -178,7 +178,62 @@ while True:
             set_leg_angles(alphas, leg_id, targets, params)
         state = sim.setJoints(targets)
     elif args.mode == "walk":
+        t = time.time()
         kinematics.walk (p.readUserDebugParameter(controls['freq']), params, targets, math.pi/4, p.readUserDebugParameter(controls['length']), p.readUserDebugParameter(controls['height']))
         state = sim.setJoints(targets)
         # Temp
+    elif args.mode == "dance":
+        t = time.time()
+        kinematics.dance (p.readUserDebugParameter(controls['freq']), params, targets, math.pi/4, p.readUserDebugParameter(controls['length']), p.readUserDebugParameter(controls['height']))
+        state = sim.setJoints(targets)
+    
+    elif args.mode == "rotate":
+        t = time.time()
+        targets = {}
+        freq = p.readUserDebugParameter(controls['freq'])
+        height = p.readUserDebugParameter(controls['height'])
+        d_x = p.readUserDebugParameter(controls['d_x'])
+        d_y = p.readUserDebugParameter(controls['d_y'])
+        z = params.z
+
+
+        tri1, tri2 = kinematics.rotate(t, freq, d_x, d_y, height, z)
+
+        for leg_id in [1,3,5]:
+            tetas = kinematics.computeIK(tri1[0], tri1[1], tri1[2])
+            set_leg_angles(tetas, leg_id, targets, params)
+
+        for leg_id in [2,4,6]:
+            tetas = kinematics.computeIK(tri2[0], tri2[1], tri2[2])
+            set_leg_angles(tetas, leg_id, targets, params)
+
+
+        state = sim.setJoints(targets)
+
+    elif args.mode == 'rotate-walk':
+        t = time.time()
+        targets1 = {}
+        freq = p.readUserDebugParameter(controls['freq'])
+        height = p.readUserDebugParameter(controls['height'])
+        d_x = p.readUserDebugParameter(controls['d_x'])
+        d_y = p.readUserDebugParameter(controls['d_y'])
+        z = params.z
+
+
+        tri1, tri2 = kinematics.rotate(t, freq, d_x, d_y, height, z)
+
+        for leg_id in [1,3,5]:
+            tetas = kinematics.computeIK(tri1[0], tri1[1], tri1[2])
+            set_leg_angles(tetas, leg_id, targets1, params)
+
+        for leg_id in [2,4,6]:
+            tetas = kinematics.computeIK(tri2[0], tri2[1], tri2[2])
+            set_leg_angles(tetas, leg_id, targets1, params)
+
+        targets2 = {}
+        kinematics.walk (p.readUserDebugParameter(controls['freq']), params, targets2, math.pi/4, p.readUserDebugParameter(controls['length']), p.readUserDebugParameter(controls['height']))
+        for k in targets2.keys():
+            targets1[k] = (targets2[k]+targets1[k])/2
+        state = sim.setJoints(targets1)
+
     sim.tick()

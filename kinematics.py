@@ -162,6 +162,44 @@ def walk(freq, params, targets, teta, length, height):
         alphas = computeIKOriented(tri2[0], tri2[1], tri2[2], leg_id, params, teta, verbose=True)
         set_leg_angles_2(alphas, leg_id, targets, params)
 
+def dance(freq, params, targets, teta, length, height):
+    t = time.time()
+    if freq == 0:
+        tri1 = [0,0,0]
+        tri2 = [0,0,0]
+    else:
+        T = 1 / freq
+        triangle = interpolation.LinearSpline3D()
+        triangle.add_entry(0, length / 2, 0,  params.z)
+        triangle.add_entry(T / 2, length / 2, 0, params.z/2)
+        triangle.add_entry(3 * T / 4, length/2, 0, params.z/4)
+        triangle.add_entry(T, length / 2, 0,  0)
+        triangles = [triangle.interpolate(t % T),triangle.interpolate((t + T/6) % T),triangle.interpolate((t + T/3) % T),triangle.interpolate((t + T/2) % T),triangle.interpolate((t + 5*T/6) % T),triangle.interpolate((t + T) % T)]
+    for leg_id in range(1,7):
+        alphas = computeIKOriented(triangles[leg_id-1][0], triangles[leg_id-1][1], triangles[leg_id-1][2], leg_id, params, teta, verbose=True)
+        set_leg_angles_2(alphas, leg_id, targets, params)
+
+def rotate(t, freq, d_x, d_y, height, z):
+
+    if freq == 0:
+        tri1 = [0,0,0]
+        tri2 = [0,0,0]
+
+    else:
+        T = 1 / freq
+        triangle = interpolation.LinearSpline3D()
+
+        triangle.add_entry(0, d_x, 0, z/2)
+        triangle.add_entry(T / 2, d_x, 0, z)
+        triangle.add_entry((3 * T) / 4, d_x, -d_y, z)
+        triangle.add_entry(T, d_x, 0, z+height)
+
+
+
+        tri1 = triangle.interpolate(t % T)
+        tri2 = triangle.interpolate((t + T/2) % T)
+
+    return tri1, tri2
 
 
 
