@@ -108,6 +108,12 @@ elif args.mode == "walk":
     controls["length"] = p.addUserDebugParameter("Longueur", 0, 0.15, 0.1)
     controls["height"] = p.addUserDebugParameter("Hauteur des pas", 0, 0.2, 0.07)
 
+elif args.mode == "rotate":
+    controls["d_x"] = p.addUserDebugParameter("d_x", 0.15, 0.2, 0.16)
+    controls["d_y"] = p.addUserDebugParameter("d_y", 0.001, 0.12, 0.05)
+    controls["freq"] = p.addUserDebugParameter("frequence", -5 , 5, 1.3)
+    controls["height"] = p.addUserDebugParameter("Hauteur des pas", 0, 0.2, 0.057)
+
 elif args.mode == "dance":
     controls["teta"] = p.addUserDebugParameter("Direction", -math.pi, math.pi, 0)
     controls["freq"] = p.addUserDebugParameter("Frequence", 0, 5, 1)
@@ -119,6 +125,8 @@ elif args.mode == "rotate-walk":
     controls["freq"] = p.addUserDebugParameter("Frequence", 0, 5, 1)
     controls["length"] = p.addUserDebugParameter("Longueur", 0, 0.15, 0.1)
     controls["height"] = p.addUserDebugParameter("Hauteur des pas", 0, 0.2, 0.07)
+    controls["d_x"] = p.addUserDebugParameter("d_x", 0.15, 0.3, 0.3)
+    controls["d_y"] = p.addUserDebugParameter("d_y", 0.001, 0.3, 0.3)
 
 while True:
     targets = {}
@@ -175,8 +183,8 @@ while True:
         p.resetBasePositionAndOrientation(
             cross, T, to_pybullet_quaternion(0, 0, leg_angle)
         )
-    elif args.mode == "robot-ik":
-        # Use your own IK function
+    elif args.mode == "dance":
+        
         for leg_id in range(1, 7):
             alphas = kinematics.computeIKOriented(    
                 0.01 * math.sin(2 * math.pi * 0.5 * time.time()),
@@ -192,11 +200,6 @@ while True:
     elif args.mode == "walk":
         t = time.time()
         kinematics.walk (p.readUserDebugParameter(controls['freq']), params, targets, math.pi/4, p.readUserDebugParameter(controls['length']), p.readUserDebugParameter(controls['height']))
-        state = sim.setJoints(targets)
-        # Temp
-    elif args.mode == "dance":
-        t = time.time()
-        kinematics.dance (p.readUserDebugParameter(controls['freq']), params, targets, math.pi/4, p.readUserDebugParameter(controls['length']), p.readUserDebugParameter(controls['height']))
         state = sim.setJoints(targets)
     
     elif args.mode == "rotate":
