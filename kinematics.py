@@ -149,10 +149,10 @@ def walk(freq, params, targets, teta, length, height):
     else:
         T = 1 / freq
         triangle = interpolation.LinearSpline3D()
-        triangle.add_entry(0, length / 2, 0,  0)
-        triangle.add_entry(T / 2, -length / 2, 0, 0)
+        triangle.add_entry(0, length / 2, 0,  params.z)
+        triangle.add_entry(T / 2, -length / 2, 0, params.z)
         triangle.add_entry(3 * T / 4, 0, 0, height)
-        triangle.add_entry(T, length / 2, 0,  0)
+        triangle.add_entry(T, length / 2, 0,  params.z)
         tri1 = triangle.interpolate(t % T)
         tri2 = triangle.interpolate((t + T/2) % T)
     for leg_id in [1,3,5]:

@@ -83,9 +83,9 @@ def main():
     try:
 
         params = Parameters(
-            freq=15,
+            freq=10,
             speed=1,
-            z=-60,
+            z=-0.7,
             travelDistancePerStep=80,
             lateralDistance=90,
             frontDistance=87,
