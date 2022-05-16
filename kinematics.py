@@ -68,19 +68,14 @@ def computeIK(
     y = y * dist_unit
     z = z * dist_unit
 
-    # theta1 is simply the angle of the leg in the X/Y plane. We have the first angle we wanted.
+    # theta1 is simply the angle of the leg in the X/Y plane.
     if y == 0 and x == 0:
-        # Taking care of this singularity (leg right on top of the first rotational axis)
         theta1 = 0
     else:
         theta1 = math.atan2(y, x)
-
-    # Distance between the second motor and the projection of the end of the leg on the X/Y plane
     xp = math.sqrt(x * x + y * y) - l1
     # Distance between the second motor arm and the end of the leg
     d = math.sqrt(math.pow(xp, 2) + math.pow(z, 2))
-    # Knowing l2, l3 and d, theta1 and theta2 can be computed using the Al Kashi law
-    # There are 2 solutions for most of the points, forcing a convention here
     theta2 = elkashi(l2, d, l3, sign=sign) - Z_DIRECTION * math.atan2(z, xp)
     theta3 = math.pi + elkashi(l2, l3, d, sign=sign)
 
@@ -105,8 +100,49 @@ def rotaton_2D(x, y, z, teta):
 
 
 
+def computeDKDetailed(
+    theta1,
+    theta2,
+    theta3,
+    use_rads=USE_RADS_INPUT
+):
+    theta1_verif = theta1
+    theta2_verif = theta2
+    theta3_verif = theta3
+    angle_unit = 1
+    dist_unit = 1
+    if not (use_rads):
+        angle_unit = math.pi / 180.0
+    if use_mm:
+        dist_unit = 1000
+    theta1 = THETA1_MOTOR_SIGN * theta1 * angle_unit
+    theta2 = (THETA2_MOTOR_SIGN * theta2 - theta2Correction) * angle_unit
+    theta3 = (THETA3_MOTOR_SIGN * theta3 - theta3Correction) * angle_unit
+
+    p = l1 + l2 * math.cos(theta2) + l3 * math.cos(theta2 + theta3)
+
+    x = math.cos(theta1) * p
+    y = math.sin(theta1) * p
+    z = -(l2 * math.sin(theta2) + l3 * math.sin(theta2 + theta3))
+
+    p0 = [0, 0, 0]
+    p1 = [l1 * math.cos(theta1) * dist_unit, l1 * math.sin(theta1) * dist_unit, 0]
+    p2 = [
+        (l1 + l2 * math.cos(theta2)) * math.cos(theta1) * dist_unit,
+        (l1 + l2 * math.cos(theta2)) * math.sin(theta1) * dist_unit,
+        -l2 * math.sin(theta2) * dist_unit,
+    ]
+    p3 = [x * dist_unit, y * dist_unit, z * dist_unit]
+    p3_verif = computeDK(
+        theta1_verif, theta2_verif, theta3_verif, use_rads
+    )
+    if (p3[0] != p3_verif[0]) or (p3[1] != p3_verif[1]) or (p3[2] != p3_verif[2]):
+        print("Error on DK ")
+
+    return [p0, p1, p2, p3]
+
 # Given the destination point (x, y, z) of a limb with 3 rotational axes separated by the distances (l1, l2, l3),
-# and an angle teta that chage the direction of the movement
+# and an angle teta that change the direction of the movement
 # returns the angles to apply to the 3 axes
 def computeIKOriented(
     x,
