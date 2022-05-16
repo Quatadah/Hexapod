@@ -15,7 +15,8 @@ Ce projet concerne l'implémentation du code pour faire marcher un robot hexapod
 
 Pour regarder la simulation : 
 
-
+python3 sim_hexa.py --mode direct : un robot qui est fixe : version de base
+python3 sim_hexa.py --mode frozen-direct : détecter la position des 3 moteurs de chaque patte
 python3 sim_hexa.py --mode walk   : la marche 
 python3 sim_hexa.py --mode rotate : la rotation 
 python3 sim_hexa.py --mode dance  : la dance 
